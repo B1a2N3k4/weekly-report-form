@@ -6,14 +6,18 @@
   <title>Weekly Report Submission</title>
   <style>
     body {
+      background-color: #FFF3E0; /* light orange background */
       font-family: Arial, sans-serif;
       margin: 40px;
     }
-    form {
-      max-width: 600px;
+    .container {
+      max-width: 800px;
+      background-color: #FFFFFF;
       padding: 20px;
-      border: 1px solid #ccc;
+      border: 2px solid #FFA726; /* orange border */
       border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255, 167, 38, 0.2);
+      margin-bottom: 30px;
     }
     label {
       display: block;
@@ -21,6 +25,7 @@
     }
     input[type="text"],
     input[type="number"],
+    input[type="date"],
     textarea {
       width: 100%;
       padding: 8px;
@@ -31,47 +36,62 @@
     input[type="submit"] {
       margin-top: 20px;
       padding: 10px 20px;
-      background-color: #4CAF50;
+      background-color: #FB8C00; /* orange button */
       color: #fff;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
+    h1 {
+      color: #E65100; /* dark orange for header */
+    }
+    .reports-section {
+      margin-top: 40px;
+    }
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: 1px solid #FFA726;
+      border-radius: 4px;
+      background-color: #FFFFFF;
+    }
   </style>
 </head>
 <body>
-  <h1>Weekly Report Submission</h1>
-  <!--
-    Replace https://script.google.com/macros/s/AKfycbwrHwZbrNjkpXHmvIrWVb_uSMKtZQ9dDHjO9Hb3bzE2rJgHG9hiP--C9UPjdAfFcquS1w/exec below with the deployed web app URL from your Google Apps Script.
-    For example: https://script.google.com/macros/s/AKfycb.../exec
-  -->
-  <form id="reportForm" method="POST" action="https://script.google.com/macros/s/AKfycbwrHwZbrNjkpXHmvIrWVb_uSMKtZQ9dDHjO9Hb3bzE2rJgHG9hiP--C9UPjdAfFcquS1w/exec">
-    <label for="serial">Serial number:</label>
-    <input type="number" id="serial" name="serial" required>
+  <div class="container">
+    <h1 id="pageTitle">Weekly Report Submission</h1>
+    <form id="reportForm" method="POST" action="https://script.google.com/macros/s/AKfycbwrHwZbrNjkpXHmvIrWVb_uSMKtZQ9dDHjO9Hb3bzE2rJgHG9hiP--C9UPjdAfFcquS1w/exec">
+      <label for="serial">Serial number:</label>
+      <input type="number" id="serial" name="serial" required>
 
-    <label for="starttime">Start time for the to‑do item:</label>
-    <input type="text" id="starttime" name="starttime" placeholder="DD/MM/YYYY or HH:MM" required>
-    <label for="where">Where:</label>
-    <input type="text" id="where" name="where" required>
+      <label for="starttime">Start time for the to to‑do item:</label>
+      <input type="text" id="starttime" name="starttime" placeholder="DD/MM/YYYY or HH:MM" required>
 
-    <label for="responsible">Responsible Person/Department:</label>
-    <input type="text" id="responsible" name="responsible" required>
+      <label for="where">Where:</label>
+      <input type="text" id="where" name="where" required>
 
-    <label for="expectedDate">Expected Completion Date:</label>
-    <input type="date" id="expectedDate" name="expectedDate" required>
+      <label for="responsible">Responsible Person/Department:</label>
+      <input type="text" id="responsible" name="responsible" required>
 
-    <label for="status">Status:</label>
-    <input type="text" id="status" name="status" required>
+      <label for="expectedDate">Expected Completion Date:</label>
+      <input type="date" id="expectedDate" name="expectedDate" required>
 
-    <label for="remark">Remark:</label>
-    <textarea id="remark" name="remark" rows="4" cols="50"></textarea>
+      <label for="status">Status:</label>
+      <input type="text" id="status" name="status" required>
 
-    <label for="content">Content:</label>
-    <textarea id="content" name="content" rows="4" cols="50" required></textarea>
+      <label for="remark">Remark:</label>
+      <textarea id="remark" name="remark" rows="4" cols="50"></textarea>
 
-    <input type="submit" value="Submit">
-  </form>
+      <label for="content">Content:</label>
+      <textarea id="content" name="content" rows="4" cols="50" required></textarea>
 
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+  <div class="reports-section">
+    <h2>Current Weekly Reports</h2>
+    <iframe src="https://docs.google.com/spreadsheets/d/1YFTRQFXmri6uqtBXSPIn50zS2dVSV3rv-DUcGbkSRok/pubhtml?widget=true&amp;headers=true"></iframe>
+  </div>
   <script>
     // Use JavaScript to submit the form via fetch to avoid CORS issues.
     const form = document.getElementById('reportForm');
@@ -90,6 +110,11 @@
         console.error(err);
       });
     });
+
+    // Set dynamic title with current date in Thai locale
+    const pageTitle = document.getElementById('pageTitle');
+    const today = new Date();
+    pageTitle.textContent = 'Weekly Report Submission - ' + today.toLocaleDateString('th-TH');
   </script>
 </body>
 </html>
