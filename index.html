@@ -19,8 +19,13 @@
       box-shadow: 0 0 10px rgba(255, 167, 38, 0.2);
       margin-bottom: 30px;
     }
-    h1 { color: #E65100; }
-    label { display: block; margin-top: 15px; }
+    h1 {
+      color: #E65100;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
     input[type="text"],
     input[type="number"],
     input[type="date"],
@@ -40,17 +45,9 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    .reports-section { margin-top: 40px; }
-    table {
-      border-collapse: collapse;
-      width: 100%;
+    .reports-section {
+      margin-top: 40px;
     }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-    th { background-color: #FFE0B2; }
   </style>
 </head>
 <body>
@@ -59,72 +56,41 @@
     <form id="reportForm" method="POST">
       <label for="serial">Serial number:</label>
       <input type="number" id="serial" name="serial" required>
-
       <label for="starttime">Start time for the to‑do item:</label>
       <input type="text" id="starttime" name="starttime" placeholder="DD/MM/YYYY หรือ HH:MM" required>
-
       <label for="content">Content:</label>
       <textarea id="content" name="content" rows="4" cols="50" required></textarea>
-
       <label for="where">Where:</label>
       <input type="text" id="where" name="where" required>
-
       <label for="responsible">Responsible Person/Department:</label>
       <input type="text" id="responsible" name="responsible" required>
-
       <label for="expectedDate">Expected Completion Date:</label>
       <input type="date" id="expectedDate" name="expectedDate" required>
-
       <label for="status">Status:</label>
       <input type="text" id="status" name="status" required>
-
       <label for="remark">Remark:</label>
       <textarea id="remark" name="remark" rows="4" cols="50"></textarea>
-
       <input type="submit" value="Submit">
     </form>
   </div>
-
   <div class="reports-section">
     <h2>Current Weekly Reports</h2>
-    <div id="sheetData">กำลังโหลดข้อมูล...</div>
+    <!-- ฝัง Google Sheet แทนการสร้างตารางด้วยสคริปต์ -->
+    <iframe
+      src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSGbmdUApagVwvA6bdLdAAk7zdkr1W63Iks8zjbYcupXwryRbBqniMbE_0miZrxCF2wLUmisZMLFOJ9/pubhtml?gid=0&single=true&widget=true&headers=false"
+      width="100%" height="600" frameborder="0"></iframe>
   </div>
-
   <script>
-    // Fetch data from published Google Sheet as CSV
-    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSGbmdUApagVwvA6bdLdAAk7zdkr1W63Iks8zjbYcupXwryRbBqniMbE_0miZrxCF2wLUmisZMLFOJ9/pub?gid=0&single=true&output=csv")
-      .then(response => response.text())
-      .then(data => {
-        const rows = data.trim().split("\\n").map(row => row.split(","));
-        let html = "<table><thead><tr>";
-        rows[0].forEach(cell => {
-          html += "<th>" + cell + "</th>";
-        });
-        html += "</tr></thead><tbody>";
-        for (let i = 1; i < rows.length; i++) {
-          html += "<tr>";
-          rows[i].forEach(cell => {
-            html += "<td>" + cell + "</td>";
-          });
-          html += "</tr>";
-        }
-        html += "</tbody></table>";
-        document.getElementById("sheetData").innerHTML = html;
-      })
-      .catch(err => {
-        document.getElementById("sheetData").innerHTML =
-          "ไม่สามารถโหลดข้อมูลได้: " + err;
-      });
-
-    // Set dynamic title with current date in Thai locale
+    // ตั้งชื่อหัวเรื่องแบบไดนามิกพร้อมวันที่
     const pageTitle = document.getElementById('pageTitle');
     const today = new Date();
     pageTitle.textContent = 'Weekly Report Submission - ' + today.toLocaleDateString('th-TH');
 
-    // Set form action to the Apps Script URL
+    // กำหนด action ของฟอร์มให้เป็น Apps Script URL
     const form = document.getElementById('reportForm');
-    form.action = "https://script.google.com/macros/s/AKfycbxluwf0YUHlYuisph5ppdJXvoTNt1QPefN-9NZow4SCPj1oKA5yovwVOfwIu1W0T_cTAg/exec";
-    // Submit form via fetch to avoid CORS
+    form.action = "https://script.google.com/macros/s/AKfycbxluwf0YUHlYuisph5ppdJXvoTNt1QPefN-9NZow4SCPj1oKA5yovwVOfwIuWT_cTAg/exec";
+
+    // ส่งข้อมูลด้วย fetch เพื่อหลีกเลี่ยงปัญหา CORS
     form.addEventListener('submit', function(event) {
       event.preventDefault();
       const formData = new FormData(form);
