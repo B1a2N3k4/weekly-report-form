@@ -93,7 +93,7 @@
 
   <script>
     // Fetch data from published Google Sheet as CSV
-    fetch("https://docs.google.com/spreadsheets/d/<<Your_Sheet_ID>>/export?format=csv")
+    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSGbmdUApagVwvA6bdLdAAk7zdkr1W63Iks8zjbYcupXwryRbBqniMbE_0miZrxCF2wLUmisZMLFOJ9/pub?gid=0&single=true&output=csv")
       .then(response => response.text())
       .then(data => {
         const rows = data.trim().split("\\n").map(row => row.split(","));
