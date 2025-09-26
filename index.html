@@ -56,8 +56,7 @@
 <body>
   <div class="container">
     <h1 id="pageTitle">Weekly Report dynamic by bank</h1>
-    <form id="reportForm" method="POST"
-      action="https://script.google.com/macros/s/AKfycbyJH2KAOMj1B4h6dIEp0bzZ2wtXr2Ov4kElfSg9RhPL7PDmgwIZ32C0a17njj1_Ps8Pxg/exec">
+    <form id="reportForm" method="POST">
       <label for="serial">Serial number:</label>
       <input type="number" id="serial" name="serial" required>
 
@@ -120,13 +119,13 @@
     // Set dynamic title with current date in Thai locale
     const pageTitle = document.getElementById('pageTitle');
     const today = new Date();
-    pageTitle.textContent = 'Weekly Report Dynamic By bank - ' + today.toLocaleDateString('th-TH');
+    pageTitle.textContent = 'Weekly Report Submission - ' + today.toLocaleDateString('th-TH');
 
-    // Submit form via fetch to avoid CORS
+    // Set form action to the Apps Script URL
     const form = document.getElementById('reportForm');
-      form.action = "https://script.google.com/macros/s/AKfycbxluwf0YUHlYuisph5ppdJXvoTNt1QPefN-9NZow4SCPj1oKA5yovwVOfwIu1W0T_cTAg/exec";
-    form.addEventListener('submit', 
-                          function(event) {
+    form.action = "https://script.google.com/macros/s/AKfycbxluwf0YUHlYuisph5ppdJXvoTNt1QPefN-9NZow4SCPj1oKA5yovwVOfwIu1W0T_cTAg/exec";
+    // Submit form via fetch to avoid CORS
+    form.addEventListener('submit', function(event) {
       event.preventDefault();
       const formData = new FormData(form);
       fetch(form.action, {
