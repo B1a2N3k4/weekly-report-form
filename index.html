@@ -6,7 +6,7 @@
   <title>Weekly Report Dynamic by bank</title>
   <style>
     body {
-      background-color: #FFF3E0; /* light orange background */
+      background-color: #FFF3E0;
       font-family: Arial, sans-serif;
       margin: 40px;
     }
@@ -14,15 +14,13 @@
       max-width: 800px;
       background-color: #FFFFFF;
       padding: 20px;
-      border: 2px solid #FFA726; /* orange border */
+      border: 2px solid #FFA726;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(255, 167, 38, 0.2);
       margin-bottom: 30px;
     }
-    label {
-      display: block;
-      margin-top: 15px;
-    }
+    h1 { color: #E65100; }
+    label { display: block; margin-top: 15px; }
     input[type="text"],
     input[type="number"],
     input[type="date"],
@@ -36,36 +34,38 @@
     input[type="submit"] {
       margin-top: 20px;
       padding: 10px 20px;
-      background-color: #FB8C00; /* orange button */
+      background-color: #FB8C00;
       color: #fff;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
-    h1 {
-      color: #E65100; /* dark orange for header */
-    }
-    .reports-section {
-      margin-top: 40px;
-    }
-    iframe {
+    .reports-section { margin-top: 40px; }
+    table {
+      border-collapse: collapse;
       width: 100%;
-      height: 500px;
-      border: 1px solid #FFA726;
-      border-radius: 4px;
-      background-color: #FFFFFF;
     }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th { background-color: #FFE0B2; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1 id="pageTitle">Weekly Report dynamic by bank</h1>
-<form id="reportForm" method="POST" action="https://script.google.com/macros/s/AKfycbyJH2KAOMj1B4h6dIEp0bzZ2wtXr2Ov4kElfSg9RhPL7PDmgwIZ32C0a17njj1_Ps8Pxg/exec">
+    <form id="reportForm" method="POST"
+      action="https://script.google.com/macros/s/AKfycbyJH2KAOMj1B4h6dIEp0bzZ2wtXr2Ov4kElfSg9RhPL7PDmgwIZ32C0a17njj1_Ps8Pxg/exec">
       <label for="serial">Serial number:</label>
       <input type="number" id="serial" name="serial" required>
 
-      <label for="starttime">Start time for the to to‑do item:</label>
-      <input type="text" id="starttime" name="starttime" placeholder="DD/MM/YYYY or HH:MM" required>
+      <label for="starttime">Start time for the to‑do item:</label>
+      <input type="text" id="starttime" name="starttime" placeholder="DD/MM/YYYY หรือ HH:MM" required>
+
+      <label for="content">Content:</label>
+      <textarea id="content" name="content" rows="4" cols="50" required></textarea>
 
       <label for="where">Where:</label>
       <input type="text" id="where" name="where" required>
@@ -80,20 +80,49 @@
       <input type="text" id="status" name="status" required>
 
       <label for="remark">Remark:</label>
-<textarea id="remark" name="remark" rows="4" cols="50"></textarea>
-
-      <label for="content">Content:</label>
-      <textarea id="content" name="content" rows="4" cols="50" required></textarea>
+      <textarea id="remark" name="remark" rows="4" cols="50"></textarea>
 
       <input type="submit" value="Submit">
     </form>
   </div>
+
   <div class="reports-section">
     <h2>Current Weekly Reports</h2>
-    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSGbmdUApagVwvA6bdLdAAk7zdkr1W63Iks8zjbYcupXwryRbBqniMbE_0miZrxCF2wLUmisZMLFOJ9/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+    <div id="sheetData">กำลังโหลดข้อมูล...</div>
   </div>
+
   <script>
-    // Use JavaScript to submit the form via fetch to avoid CORS issues.
+    // Fetch data from published Google Sheet as CSV
+    fetch("https://docs.google.com/spreadsheets/d/<<Your_Sheet_ID>>/export?format=csv")
+      .then(response => response.text())
+      .then(data => {
+        const rows = data.trim().split("\\n").map(row => row.split(","));
+        let html = "<table><thead><tr>";
+        rows[0].forEach(cell => {
+          html += "<th>" + cell + "</th>";
+        });
+        html += "</tr></thead><tbody>";
+        for (let i = 1; i < rows.length; i++) {
+          html += "<tr>";
+          rows[i].forEach(cell => {
+            html += "<td>" + cell + "</td>";
+          });
+          html += "</tr>";
+        }
+        html += "</tbody></table>";
+        document.getElementById("sheetData").innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById("sheetData").innerHTML =
+          "ไม่สามารถโหลดข้อมูลได้: " + err;
+      });
+
+    // Set dynamic title with current date in Thai locale
+    const pageTitle = document.getElementById('pageTitle');
+    const today = new Date();
+    pageTitle.textContent = 'Weekly Report Submission - ' + today.toLocaleDateString('th-TH');
+
+    // Submit form via fetch to avoid CORS
     const form = document.getElementById('reportForm');
     form.addEventListener('submit', function(event) {
       event.preventDefault();
@@ -103,18 +132,13 @@
         mode: 'no-cors',
         body: formData
       }).then(() => {
-        alert('Your report has been submitted successfully!');
+        alert('รายงานของคุณถูกส่งเรียบร้อยแล้ว!');
         form.reset();
       }).catch(err => {
-        alert('There was an error submitting the form. Please check the console for details.');
+        alert('เกิดข้อผิดพลาดในการส่งข้อมูล โปรดตรวจสอบ');
         console.error(err);
       });
     });
-
-    // Set dynamic title with current date in Thai locale
-    const pageTitle = document.getElementById('pageTitle');
-    const today = new Date();
-    pageTitle.textContent = 'Weekly Report Submission - ' + today.toLocaleDateString('th-TH');
   </script>
 </body>
 </html>
