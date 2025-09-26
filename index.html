@@ -120,7 +120,7 @@
     // Set dynamic title with current date in Thai locale
     const pageTitle = document.getElementById('pageTitle');
     const today = new Date();
-    pageTitle.textContent = 'Weekly Report Submission - ' + today.toLocaleDateString('th-TH');
+    pageTitle.textContent = 'Weekly Report Dynamic By bank - ' + today.toLocaleDateString('th-TH');
 
     // Submit form via fetch to avoid CORS
     const form = document.getElementById('reportForm');
