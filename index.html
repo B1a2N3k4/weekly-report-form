@@ -124,7 +124,9 @@
 
     // Submit form via fetch to avoid CORS
     const form = document.getElementById('reportForm');
-    form.addEventListener('submit', function(event) {
+      form.action = "https://script.google.com/macros/s/AKfycbxluwf0YUHlYuisph5ppdJXvoTNt1QPefN-9NZow4SCPj1oKA5yovwVOfwIu1W0T_cTAg/exec";
+    form.addEventListener('submit', 
+                          function(event) {
       event.preventDefault();
       const formData = new FormData(form);
       fetch(form.action, {
